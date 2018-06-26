@@ -21,4 +21,4 @@ Requisites
 Install
 -------
 
-- ``nimble install kdialog``
+- ``nimble install https://github.com/juancarlospaco/nim-kdialog.git``
