@@ -4,13 +4,6 @@ Nim-KDialog
 .. image:: kdialog.png
 
 
-Why not X?
-----------
-
-Based on http://www.linux-magazine.com/Issues/2009/99/Zenity-and-KDialog
-KDialog has more features and its ported to Qt5. UX is overall superior.
-KDE / Kdialog runs on MS Windows, while Gnome does not.
-
 Why not a proper GUI Toolkit?
 -----------------------------
 
