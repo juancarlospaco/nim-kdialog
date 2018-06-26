@@ -1,7 +1,7 @@
 Nim-KDialog
 ===========
 
-..image:: kdialog.png
+.. image:: kdialog.png
 
 
 Why not X?
