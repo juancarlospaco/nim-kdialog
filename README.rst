@@ -7,6 +7,7 @@ Use
 ---
 
 .. code: nim
+
   import kdialog
 
   echo yesno "Love Nim?"
