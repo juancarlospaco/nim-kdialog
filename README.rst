@@ -6,7 +6,7 @@ Nim-KDialog
 Use
 ---
 
-.. code: nim
+.. code:: nim
 
   import kdialog
 
