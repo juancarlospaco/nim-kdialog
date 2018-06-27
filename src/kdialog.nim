@@ -26,7 +26,7 @@
 # https://techbase.kde.org/Development/Tutorials/Shell_Scripting_with_KDE_Dialogs
 # https://mostlylinux.wordpress.com/bashscripting/kdialog
 
-import os, osproc, strformat, strutils, times
+import os, osproc, strformat, strutils, times, colors
 
 
 const
@@ -130,7 +130,7 @@ proc geticon*(title: string= default_title, stderrs: string= stderrs): tuple =
 
 proc getcolor*(title: string= default_title, stderrs: string= stderrs): tuple =
   let comand = execCmdEx(fmt"kdialog --title '{title}' --getcolor{stderrs}")
-  (output: comand.output.strip, exitCode: comand.exitCode)
+  (output: parseColor(comand.output.strip), exitCode: comand.exitCode)
 
 proc slider*(text_or_html: string, minimum: int, maximum: int, steps: int8, title: string= default_title, stderrs: string= stderrs): tuple =
   let comand = execCmdEx(fmt"kdialog --title '{title}' --slider '{text_or_html}' {minimum} {maximum} {steps}{stderrs}")
