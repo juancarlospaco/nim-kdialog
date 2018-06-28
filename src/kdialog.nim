@@ -140,25 +140,48 @@ proc calendar*(text_or_html: string, title: string= default_title, stderrs: stri
   let comand = execCmdEx(fmt"kdialog --title '{title}' --calendar '{text_or_html}'{stderrs}")
   (output: parse(comand.output.strip, "ddd MMM d yyyy"), exitCode: comand.exitCode)
 
+proc checklist*(text_or_html: string, items: array, title: string= default_title, stderrs: string= stderrs): tuple =
+  var itemz = ""
+  for indx, item in items.pairs:
+    let state = if item[1]: "on" else: "off"
+    itemz.add(fmt"{indx + 1} '{item[0]}' {state} ")
+  let comand = execCmdEx(fmt"kdialog --title '{title}' --checklist '{text_or_html}' {itemz} {stderrs}")
+  (output: comand.output.strip.split(" "), exitCode: comand.exitCode)
+
+proc radiolist*(text_or_html: string, items: array, title: string= default_title, stderrs: string= stderrs): tuple =
+  var itemz = ""
+  for indx, item in items.pairs:
+    let state = if item[1]: "on" else: "off"
+    itemz.add(fmt"{indx + 1} '{item[0]}' {state} ")
+  let comand = execCmdEx(fmt"kdialog --title '{title}' --radiolist '{text_or_html}' {itemz} {stderrs}")
+  (output: parseInt(comand.output.strip), exitCode: comand.exitCode)
+
+proc menu*(text_or_html: string, items: array, title: string= default_title, stderrs: string= stderrs): tuple =
+  var itemz = ""
+  for indx, item in items:
+    echo indx, item
+    itemz.add(fmt"{indx + 1} '{item}' ")
+  echo itemz
+  let comand = execCmdEx(fmt"kdialog --title '{title}' --menu '{text_or_html}' {itemz} {stderrs}")
+  (output: parseInt(comand.output.strip), exitCode: comand.exitCode)
+
+proc combobox*(text_or_html: string, items: array, title: string= default_title, stderrs: string= stderrs): tuple =
+  var itemz = ""
+  for item in items:
+    itemz.add(fmt"'{item}' ")
+  let comand = execCmdEx(fmt"kdialog --title '{title}' --combobox '{text_or_html}' {itemz} {stderrs}")
+  (output: comand.output.strip, exitCode: comand.exitCode)
+
 
 ################################################################################
 # TODO: These ones needs more work to allow flexible parameters, they are WIP.
 #
-# proc checklist*(text_or_html: string, separate_output: bool=false, title: string= default_title): tuple =
-#   let sepa = if separate_output: "--separate-output" else: ""
-#   execCmdEx(fmt"kdialog --title '{title}' --checklist '{text_or_html}' {sepa}")
-#
+
 # proc combobox*(text_or_html: string, title: string= default_title): tuple =
 #   execCmdEx(fmt"kdialog --title '{title}' --combobox '{text_or_html}'")
 #
-# proc menu*(text_or_html: string, title: string= default_title): tuple =
-#   execCmdEx(fmt"kdialog --title '{title}' --menu '{text_or_html}'")
-#
 # proc progressbar*(text_or_html: string, value: int8, title: string= default_title): tuple =
 #   execCmdEx(fmt"kdialog --title '{title}' --progressbar '{text_or_html}' {value}")
-#
-# proc radiolist*(text_or_html: string, title: string= default_title): tuple =
-#   execCmdEx(fmt"kdialog --title '{title}' --radiolist '{text_or_html}'")
 
 
 when not defined(release):
