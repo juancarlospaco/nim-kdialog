@@ -28,7 +28,6 @@
 
 import os, osproc, strformat, strutils, times, colors
 
-
 const
   version* = staticExec("kdialog --version") ## KDialog version that this Nim module was using when compiled.
   authors* = staticExec("kdialog --author")  ## KDialog authors.
@@ -38,109 +37,106 @@ when defined(posix):
 else:
   const stderrs* = ""                        # Windows?.
 
+template kdialogizer(widget, text_or_html, title: string): untyped =
+  let
+    titleq = quoteShell(title.strip)
+    textoq = quoteShell(text_or_html.strip)
+    comand = execCmdEx("kdialog --title " & titleq & widget & textoq & stderrs)
+  (output: comand.exitCode == 0, exitCode: comand.exitCode.int8)
 
-proc yesno*(text_or_html: string, title: string= default_title, stderrs: string= stderrs): tuple =
-  let comand = execCmdEx(fmt"kdialog --title '{title}' --yesno '{text_or_html}'{stderrs}")
-  (output: comand.exitCode == 0, exitCode: comand.exitCode)
+proc yesno*(text_or_html: string, title = default_title, stderrs = stderrs): tuple =
+  kdialogizer(" --yesno ", text_or_html, title)
 
-proc yesnocancel*(text_or_html: string, title: string= default_title, stderrs: string= stderrs): tuple =
-  let comand = execCmdEx(fmt"kdialog --title '{title}' --yesnocancel '{text_or_html}'{stderrs}")
-  (output: comand.exitCode == 0, exitCode: comand.exitCode)
+proc yesnocancel*(text_or_html: string, title = default_title, stderrs = stderrs): tuple =
+  kdialogizer(" --yesnocancel ", text_or_html, title)
 
-proc warningyesno*(text_or_html: string, title: string= default_title, stderrs: string= stderrs): tuple =
-  let comand = execCmdEx(fmt"kdialog --title '{title}' --warningyesno '{text_or_html}'{stderrs}")
-  (output: comand.exitCode == 0, exitCode: comand.exitCode)
+proc warningyesno*(text_or_html: string, title = default_title, stderrs = stderrs): tuple =
+  kdialogizer(" --warningyesno ", text_or_html, title)
 
-proc warningcontinuecancel*(text_or_html: string, title: string= default_title, stderrs: string= stderrs): tuple =
-  let comand = execCmdEx(fmt"kdialog --title '{title}' --warningcontinuecancel '{text_or_html}'{stderrs}")
-  (output: comand.exitCode == 0, exitCode: comand.exitCode)
+proc warningcontinuecancel*(text_or_html: string, title = default_title, stderrs = stderrs): tuple =
+  kdialogizer(" --warningcontinuecancel ", text_or_html, title)
 
-proc warningyesnocancel*(text_or_html: string, title: string= default_title, stderrs: string= stderrs): tuple =
-  let comand = execCmdEx(fmt"kdialog --title '{title}' --warningyesnocancel '{text_or_html}'{stderrs}")
-  (output: comand.exitCode == 0, exitCode: comand.exitCode)
+proc warningyesnocancel*(text_or_html: string, title = default_title, stderrs = stderrs): tuple =
+  kdialogizer(" --warningyesnocancel ", text_or_html, title)
 
-proc sorry*(text_or_html: string, title: string= default_title, stderrs: string= stderrs): tuple =
-  let comand = execCmdEx(fmt"kdialog --title '{title}' --sorry '{text_or_html}'")
-  (output: comand.exitCode == 0, exitCode: comand.exitCode)
+proc sorry*(text_or_html: string, title = default_title, stderrs = stderrs): tuple =
+  kdialogizer(" --sorry ", text_or_html, title)
 
-proc detailedsorry*(text_or_html: string, details: string, title: string= default_title, stderrs: string= stderrs): tuple =
+proc detailedsorry*(text_or_html: string, details: string, title = default_title, stderrs = stderrs): tuple =
   let comand = execCmdEx(fmt"kdialog --title '{title}' --detailedsorry '{text_or_html}' '{details}'{stderrs}")
   (output: comand.exitCode == 0, exitCode: comand.exitCode)
 
-proc error*(text_or_html: string, title: string= default_title, stderrs: string= stderrs): tuple =
-  let comand = execCmdEx(fmt"kdialog --title '{title}' --error '{text_or_html}'{stderrs}")
-  (output: comand.exitCode == 0, exitCode: comand.exitCode)
+proc error*(text_or_html: string, title = default_title, stderrs = stderrs): tuple =
+  kdialogizer(" --error ", text_or_html, title)
 
-proc detailederror*(text_or_html: string, details: string, title: string= default_title, stderrs: string= stderrs): tuple =
+proc detailederror*(text_or_html, details: string, title = default_title, stderrs = stderrs): tuple =
   let comand = execCmdEx(fmt"kdialog --title '{title}' --detailederror '{text_or_html}' '{details}'{stderrs}")
   (output: comand.exitCode == 0, exitCode: comand.exitCode)
 
-proc msgbox*(text_or_html: string, title: string= default_title, stderrs: string= stderrs): tuple =
-  let comand = execCmdEx(fmt"kdialog --title '{title}' --msgbox '{text_or_html}'{stderrs}")
-  (output: comand.exitCode == 0, exitCode: comand.exitCode)
+proc msgbox*(text_or_html: string, title = default_title, stderrs = stderrs): tuple =
+  kdialogizer(" --msgbox ", text_or_html, title)
 
-proc inputbox*(text_or_html: string, init: string = "", title: string= default_title, stderrs: string= stderrs): tuple =
+proc inputbox*(text_or_html: string, init = "", title = default_title, stderrs = stderrs): tuple =
   let comand = execCmdEx(fmt"kdialog --title '{title}' --inputbox '{text_or_html}' '{init}'{stderrs}")
   (output: $comand.output.strip, exitCode: comand.exitCode)
 
-proc password*(text_or_html: string, init: string = "", title: string= default_title, stderrs: string= stderrs): tuple =
+proc password*(text_or_html: string, init = "", title = default_title, stderrs = stderrs): tuple =
   let comand = execCmdEx(fmt"kdialog --title '{title}' --password '{text_or_html}'{stderrs}")
   (output: $comand.output.strip, exitCode: comand.exitCode)
 
-proc newpassword*(text_or_html: string, title: string= default_title, stderrs: string= stderrs): tuple =
+proc newpassword*(text_or_html: string, title = default_title, stderrs = stderrs): tuple =
   let comand = execCmdEx(fmt"kdialog --title '{title}' --newpassword '{text_or_html}'{stderrs}")
   (output: $comand.output.strip, exitCode: comand.exitCode)
 
-proc textbox*(text_or_html: string, title: string= default_title, stderrs: string= stderrs): tuple =
-  let comand = execCmdEx(fmt"kdialog --title '{title}' --textbox '{text_or_html}'{stderrs}")
-  (output: comand.exitCode == 0, exitCode: comand.exitCode)
+proc textbox*(text_or_html: string, title = default_title, stderrs = stderrs): tuple =
+  kdialogizer(" --textbox ", text_or_html, title)
 
-proc textinputbox*(text_or_html: string, init: string = "", stderr2output: bool= false, title: string= default_title, stderrs: string= stderrs): tuple =
+proc textinputbox*(text_or_html: string, init = "", stderr2output = false, title = default_title, stderrs = stderrs): tuple =
   let comand = execCmdEx(fmt"kdialog --title '{title}' --textinputbox '{text_or_html}' '{init}'{stderrs}")
   (output: $comand.output.strip, exitCode: comand.exitCode)
 
-proc passivepopup*(text_or_html: string, timeout: int8, title: string= default_title, stderrs: string= stderrs): int =
+proc passivepopup*(text_or_html: string, timeout: int8, title = default_title, stderrs = stderrs): int =
   execCmdEx(fmt"kdialog --title '{title}' --passivepopup '{text_or_html}' {timeout}{stderrs}").exitCode
 
-proc getopenfilename*(startDir: string= getCurrentDir(), filter: string= "*.*", multiple: bool=false, title: string= default_title, stderrs: string= stderrs): tuple =
+proc getopenfilename*(startDir = getCurrentDir(), filter = "*.*", multiple =false, title = default_title, stderrs = stderrs): tuple =
   let multi = if multiple: "--multiple" else: ""
   let comand = execCmdEx(fmt"kdialog --title '{title}' --getopenfilename '{startDir}' '{filter}' {multi}{stderrs}")
   (output: $comand.output.strip, exitCode: comand.exitCode)
 
-proc getsavefilename*(startDir: string= getCurrentDir(), filter: string= "*.*", title: string= default_title, stderrs: string= stderrs): tuple =
+proc getsavefilename*(startDir = getCurrentDir(), filter = "*.*", title = default_title, stderrs = stderrs): tuple =
   let comand = execCmdEx(fmt"kdialog --title '{title}' --getsavefilename '{startDir}' '{filter}'{stderrs}")
   (output: $comand.output.strip, exitCode: comand.exitCode)
 
-proc getexistingdirectory*(startDir: string= getCurrentDir(), title: string= default_title, stderrs: string= stderrs): tuple =
+proc getexistingdirectory*(startDir = getCurrentDir(), title = default_title, stderrs = stderrs): tuple =
   let comand = execCmdEx(fmt"kdialog --title '{title}' --getexistingdirectory '{startDir}'{stderrs}")
   (output: $comand.output.strip, exitCode: comand.exitCode)
 
-proc getopenurl*(startDir: string= getCurrentDir(), filter: string= "*.*", multiple: bool= false, title: string= default_title, stderrs: string= stderrs): tuple =
+proc getopenurl*(startDir = getCurrentDir(), filter = "*.*", multiple = false, title = default_title, stderrs = stderrs): tuple =
   let multi = if multiple: "--multiple" else: ""
   let comand = execCmdEx(fmt"kdialog --title '{title}' --getopenurl '{startDir}' '{filter}' {multi}{stderrs}")
   (output: $comand.output.strip, exitCode: comand.exitCode)
 
-proc getsaveurl*(startDir: string= getCurrentDir(), filter: string= "*.*", title: string= default_title, stderrs: string= stderrs): tuple =
+proc getsaveurl*(startDir = getCurrentDir(), filter = "*.*", title = default_title, stderrs = stderrs): tuple =
   let comand = execCmdEx(fmt"kdialog --title '{title}' --getsaveurl '{startDir}' '{filter}'{stderrs}")
   (output: $comand.output.strip, exitCode: comand.exitCode)
 
-proc geticon*(title: string= default_title, stderrs: string= stderrs): tuple =
+proc geticon*(title = default_title, stderrs = stderrs): tuple =
   let comand = execCmdEx(fmt"kdialog --title '{title}' --geticon{stderrs}")
   (output: comand.output.strip, exitCode: comand.exitCode)
 
-proc getcolor*(title: string= default_title, stderrs: string= stderrs): tuple =
+proc getcolor*(title = default_title, stderrs = stderrs): tuple =
   let comand = execCmdEx(fmt"kdialog --title '{title}' --getcolor{stderrs}")
   (output: parseColor(comand.output.strip), exitCode: comand.exitCode)
 
-proc slider*(text_or_html: string, minimum: int, maximum: int, steps: int8, title: string= default_title, stderrs: string= stderrs): tuple =
+proc slider*(text_or_html: string, minimum: int, maximum: int, steps: int8, title = default_title, stderrs = stderrs): tuple =
   let comand = execCmdEx(fmt"kdialog --title '{title}' --slider '{text_or_html}' {minimum} {maximum} {steps}{stderrs}")
   (output: comand.output.strip.parseInt, exitCode: comand.exitCode)
 
-proc calendar*(text_or_html: string, title: string= default_title, stderrs: string= stderrs): tuple =
+proc calendar*(text_or_html: string, title = default_title, stderrs = stderrs): tuple =
   let comand = execCmdEx(fmt"kdialog --title '{title}' --calendar '{text_or_html}'{stderrs}")
   (output: parse(comand.output.strip, "ddd MMM d yyyy"), exitCode: comand.exitCode)
 
-proc checklist*(text_or_html: string, items: array, title: string= default_title, stderrs: string= stderrs): tuple =
+proc checklist*(text_or_html: string, items: array, title = default_title, stderrs = stderrs): tuple =
   var itemz = ""
   for indx, item in items.pairs:
     let state = if item[1]: "on" else: "off"
@@ -148,7 +144,7 @@ proc checklist*(text_or_html: string, items: array, title: string= default_title
   let comand = execCmdEx(fmt"kdialog --title '{title}' --checklist '{text_or_html}' {itemz} {stderrs}")
   (output: comand.output.strip.split(" "), exitCode: comand.exitCode)
 
-proc radiolist*(text_or_html: string, items: array, title: string= default_title, stderrs: string= stderrs): tuple =
+proc radiolist*(text_or_html: string, items: array, title = default_title, stderrs = stderrs): tuple =
   var itemz = ""
   for indx, item in items.pairs:
     let state = if item[1]: "on" else: "off"
@@ -156,7 +152,7 @@ proc radiolist*(text_or_html: string, items: array, title: string= default_title
   let comand = execCmdEx(fmt"kdialog --title '{title}' --radiolist '{text_or_html}' {itemz} {stderrs}")
   (output: parseInt(comand.output.strip), exitCode: comand.exitCode)
 
-proc menu*(text_or_html: string, items: array, title: string= default_title, stderrs: string= stderrs): tuple =
+proc menu*(text_or_html: string, items: array, title = default_title, stderrs = stderrs): tuple =
   var itemz = ""
   for indx, item in items:
     echo indx, item
@@ -165,7 +161,7 @@ proc menu*(text_or_html: string, items: array, title: string= default_title, std
   let comand = execCmdEx(fmt"kdialog --title '{title}' --menu '{text_or_html}' {itemz} {stderrs}")
   (output: parseInt(comand.output.strip), exitCode: comand.exitCode)
 
-proc combobox*(text_or_html: string, items: array, title: string= default_title, stderrs: string= stderrs): tuple =
+proc combobox*(text_or_html: string, items: array, title = default_title, stderrs = stderrs): tuple =
   var itemz = ""
   for item in items:
     itemz.add(fmt"'{item}' ")
@@ -176,11 +172,10 @@ proc combobox*(text_or_html: string, items: array, title: string= default_title,
 ################################################################################
 # TODO: These ones needs more work to allow flexible parameters, they are WIP.
 #
-
-# proc combobox*(text_or_html: string, title: string= default_title): tuple =
+# proc combobox*(text_or_html: string, title = default_title): tuple =
 #   execCmdEx(fmt"kdialog --title '{title}' --combobox '{text_or_html}'")
 #
-# proc progressbar*(text_or_html: string, value: int8, title: string= default_title): tuple =
+# proc progressbar*(text_or_html: string, value: int8, title = default_title): tuple =
 #   execCmdEx(fmt"kdialog --title '{title}' --progressbar '{text_or_html}' {value}")
 
 
