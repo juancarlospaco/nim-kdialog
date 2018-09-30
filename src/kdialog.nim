@@ -169,33 +169,23 @@ proc combobox*(text_or_html: string, items: array, title = default_title, stderr
   (output: comand.output.strip, exitCode: comand.exitCode)
 
 
-################################################################################
-# TODO: These ones needs more work to allow flexible parameters, they are WIP.
-#
-# proc combobox*(text_or_html: string, title = default_title): tuple =
-#   execCmdEx(fmt"kdialog --title '{title}' --combobox '{text_or_html}'")
-#
-# proc progressbar*(text_or_html: string, value: int8, title = default_title): tuple =
-#   execCmdEx(fmt"kdialog --title '{title}' --progressbar '{text_or_html}' {value}")
-
-
-when not defined(release):
-  if is_main_module:
-    echo version, authors, default_title
-    echo yesno "Love Nim?"
-    echo yesnocancel "Is Nim Awesome?"
-    echo warningyesno "Update Nimble index!"
-    echo warningcontinuecancel "Nimble is Up-to-date!"
-    echo warningyesnocancel "Contribute to Nim today?"
-    echo sorry "We got no Interfaces..."
-    echo error "Your Nim does not compile!"
-    echo newpassword "Enter some Password here"
-    echo getcolor "Which is the best color?"
-    echo calendar "When is the next eclipse?"
-    echo msgbox "<h1>Nim KDialog!</h1><hr>You can use:<ul><li>HTML (no CSS, no JS)</li><li>Images (full path)</li><li>Custom icons (registered)</li></ul>"
-    echo getopenfilename()
-    echo getsavefilename()
-    echo getexistingdirectory()
-    echo getopenurl()
-    echo getsaveurl()
-    echo geticon()
+runnableExamples:
+  import strutils
+  echo version, authors, default_title
+  echo yesno "Love Nim?"
+  echo yesnocancel "Is Nim Awesome?"
+  echo warningyesno "Update Nimble index!"
+  echo warningcontinuecancel "Nimble is Up-to-date!"
+  echo warningyesnocancel "Contribute to Nim today?"
+  echo sorry "We got no Interfaces..."
+  echo error "Your Nim does not compile!"
+  echo newpassword "Enter some Password here"
+  echo getcolor "Which is the best color?"
+  echo calendar "When is the next eclipse?"
+  echo msgbox "<h1>Nim KDialog!</h1><hr>You can use:<ul><li>HTML (no CSS, no JS)</li><li>Images (full path)</li><li>Custom icons (registered)</li></ul>"
+  echo getopenfilename()
+  echo getsavefilename()
+  echo getexistingdirectory()
+  echo getopenurl()
+  echo getsaveurl()
+  echo geticon()

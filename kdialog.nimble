@@ -1,6 +1,6 @@
 # Package
 
-version       = "0.1.2"
+version       = "0.2.2"
 author        = "Juan Carlos"
 description   = "KDialog Qt5 Wrapper, easy API, KISS design"
 license       = "LGPLv3"
@@ -8,4 +8,4 @@ srcDir        = "src"
 
 # Dependencies
 
-requires "nim >= 0.18.0"
+requires "nim >= 0.19.0"
