@@ -37,6 +37,8 @@ Why not a proper GUI Toolkit?
 - KISS principle, easy to use, simple API, Nim need GUI, this is **~32Kb compiled**.
 - KDEs Documentation works for this module since its 1:1 clone. Has builtin Examples.
 - The idea is to help people move from procedural Bash to Nim with GUI.
+- I tried using `dialog`, `whiptail`, they both fail because kinda buggy.
+- I tried using `xdialog`, `gdialog` they both fail, mostly spamm polluting output with useless GTK warnings.
 
 Requisites
 ----------
